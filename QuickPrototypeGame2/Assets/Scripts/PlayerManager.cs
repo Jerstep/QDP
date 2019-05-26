@@ -9,7 +9,7 @@ public class PlayerManager : MonoBehaviour
     public Camera camera;
 
     public float moveSpeed;
-    public int playerScore;
+    public int playerScore = 0;
 
     MoveTowards moveTowards = new MoveTowards();
     TransformToVector3 convertTransform = new TransformToVector3();
@@ -23,7 +23,7 @@ public class PlayerManager : MonoBehaviour
     {
         int index = 0;
 
-        while(Vector3.Distance(transform.position, targets[targets.Length-1].position) > 0.001f)
+        while(Vector3.Distance(player.transform.position, targets[targets.Length-1].position) > 0.1f)
         {
             Vector3 destination = targets[index].position;
             while(player.position != destination)
@@ -40,9 +40,12 @@ public class PlayerManager : MonoBehaviour
             {
                 index++;
             }
-
+            Debug.Log(index);
+            Debug.Log(Vector3.Distance(player.transform.position, targets[targets.Length - 1].position));
             yield return null;
         }
+        index = 0;
+        targets = new Transform[0];
     }
 
     private void OnPipeClick()
@@ -60,6 +63,8 @@ public class PlayerManager : MonoBehaviour
                 if(hitobject.CompareTag("ChoiseTag"))
                 {
                     StartCoroutine(MoveTo(player.transform, hitobject.GetComponent<Choise>().pathPositions, moveSpeed));
+                    hitobject.SetActive(false);
+                    playerScore++;
                 }
                 else
                 {
